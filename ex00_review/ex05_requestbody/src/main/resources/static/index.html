@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTTP 요청 테스트 화면</title>
+  </head>
+  <body>
+    <button onclick="sendJson()">POST JSON 요청</button>
+    <script>
+      function sendJson() {
+        const book = {
+          title: "태백산맥",
+          page: 99,
+          author: "허균"
+        };
+        fetch("/api/v1/json-post", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(book),
+        });
+      }
+    </script>
+  </body>
+</html>

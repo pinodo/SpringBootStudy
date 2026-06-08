@@ -63,7 +63,7 @@ public class UserController {
   public void modifyUser() {
     notificationService.sendNotification("수정되었습니다!");
   }
-// 6/19, 7/2~7/24
+//
   @RequestMapping("/json-test")
   public void jsonTest() {
     try {
