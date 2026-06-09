@@ -22,12 +22,12 @@ public class BookService {
       addBook(BookRequest.builder()
       .isbn((long) i)
       .title("book" + i)
-      .price((int) Math.random() * 10000)
+      .price((int) (Math.random() * 40001) + 10000)
       .build());   
       // BookResponse book = BookResponse.builder()
-      //     .isbn(sequence.incrementAndGet())
+      //     .isbn((long) i)
       //     .title("book" + i)
-      //     .price((int) Math.random() * 10000)
+      //     .price((int) (Math.random() * 40001) + 10000)
       //     .build();
       // addBook(book);
     }
@@ -57,8 +57,10 @@ public class BookService {
 
   // 3. 도서 가격 수정
   public BookResponse updateBook(Long isbn, BookRequest request) {
-    findBookById(isbn);
+    BookResponse foundBook = findBookById(isbn);
     BookResponse updatedBook = BookResponse.builder()
+      .isbn(foundBook.isbn())
+      .title(foundBook.title())
       .price(request.price())
       .build();
     return updatedBook;
