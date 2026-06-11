@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.mybatis.domain.Post;
 import com.example.mybatis.dto.PageResponse;
@@ -15,7 +14,6 @@ import com.example.mybatis.exception.CustomException;
 import com.example.mybatis.exception.ErrorCode;
 import com.example.mybatis.mapper.PostMapper;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Transactional(readOnly = true, rollbackFor = Exception.class)
@@ -68,13 +66,12 @@ public class PostService {
 
   // Update
   @Transactional
-  public PostResponse updatePost(
-    @Valid @RequestBody Long id,
-    @Valid @RequestBody PostUpdateRequest request) {
+  public PostResponse updatePost(Long id, PostUpdateRequest request) {
       Post post = postMapper.findById(id)
           .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
       post.setTitle(request.title());
       post.setContent(request.content());
+      postMapper.update(post);
       return PostResponse.from(post);
 
     // PostResponse foundPost = findById(id);
@@ -91,11 +88,11 @@ public class PostService {
   // Delete
   @Transactional
   public void deletePost(Long id) {
-    postMapper.findById(id);
+    postMapper.findById(id)
+        .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
     postMapper.deleteById(id);
 
-    // postMapper.findById(id)
-    //     .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+    // postMapper.findById(id);
     // postMapper.deleteById(id);
   }
 }
