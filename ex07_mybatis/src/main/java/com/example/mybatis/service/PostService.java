@@ -1,20 +1,31 @@
 package com.example.mybatis.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.mybatis.domain.Post;
+import com.example.mybatis.dto.PageResponse;
 import com.example.mybatis.dto.PostCreateRequest;
 import com.example.mybatis.dto.PostResponse;
+import com.example.mybatis.dto.PostUpdateRequest;
+import com.example.mybatis.exception.CustomException;
+import com.example.mybatis.exception.ErrorCode;
 import com.example.mybatis.mapper.PostMapper;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@Transactional(readOnly = true, rollbackFor = Exception.class)
 @RequiredArgsConstructor
 @Service
 public class PostService {
 
   private final PostMapper postMapper;
 
+  @Transactional
   public PostResponse createPost(PostCreateRequest request) {
     Post post = Post.builder()
         .userId(request.userId()) // FK
@@ -34,6 +45,57 @@ public class PostService {
   }
 
   public PostResponse findById(Long id) {
-    return null;
+    // Return값: Optional<Post> -> 리턴받은 값을 .orElseThrow로 처리 가능
+    // {returnedValue}.get(); // 100% 데이터가 존재할 때 사용
+    // {returnedValue}.orElse(post); // 데이터가 NULL일 때 대신 사용할 객체 지정
+    Post post = postMapper.findById(id)
+      .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+    return PostResponse.from(post); // post로부터 PostResponse 얻기
+  }
+
+  public PageResponse<PostResponse> getPosts(int page, int size, String sort) {
+    long offset = (page - 1) * size;
+    long totalElements = postMapper.countAll();
+    int totalPages = (int) Math.ceil((double)totalElements / size);
+
+    List<Post> posts = postMapper.findAll(offset, size, sort);
+    List<PostResponse> contents = posts.stream()
+        .map(post -> PostResponse.from(post)) // .map(PostResponse::from) 메서드 참조
+        .toList(); // .collect(Collectors.toList())
+    
+    return new PageResponse<>(contents, page, size, totalPages, totalElements, sort);
+  }
+
+  // Update
+  @Transactional
+  public PostResponse updatePost(
+    @Valid @RequestBody Long id,
+    @Valid @RequestBody PostUpdateRequest request) {
+      Post post = postMapper.findById(id)
+          .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+      post.setTitle(request.title());
+      post.setContent(request.content());
+      return PostResponse.from(post);
+
+    // PostResponse foundPost = findById(id);
+    // Post updatedPost = Post.builder()
+    //     .id(foundPost.id())
+    //     .title(request.title())
+    //     .content(request.content())
+    //     .build();
+    // postMapper.update(updatedPost);
+    // return findById(updatedPost.getId());
+    // return PostResponse.from(updatedPost);
+  }
+  
+  // Delete
+  @Transactional
+  public void deletePost(Long id) {
+    postMapper.findById(id);
+    postMapper.deleteById(id);
+
+    // postMapper.findById(id)
+    //     .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+    // postMapper.deleteById(id);
   }
 }

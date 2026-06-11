@@ -9,7 +9,7 @@
     <result property="title" column="title"/>
     <result property="content" column="content"/>
     <result property="createdAt" column="post_created_at"/>
-    <association property="user" javaType="u">
+    <association property="user" javaType="User">
       <id property="id" column="user_id"/>
       <result property="email" column="email"/>
       <result property="nickname" column="nickname"/>
@@ -36,7 +36,9 @@
         u.nickname
     FROM users u
     INNER JOIN posts p ON u.id = p.user_id
-    ORDER BY p.created_at DESC
+    <!-- #{sort} -> 'DESC' (Parameter Binding): Bad SQL -->
+    <!-- ${sort} -> DESC (단순 치환): 쿼리문의 키워드 대체할 때 (테이블명, 필드, 칼럼) -->
+    ORDER BY p.created_at ${sort} 
     LIMIT #{offset}, #{size}
   </select>
 
