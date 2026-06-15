@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: ex05_rest_api_book_exercise_mybatis
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybatis_db?serverTimezone=Asia/Seoul
+    username: root
+    password: 
+  sql:
+    init:
+      mode: always
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.example.restapi.bookexercise.mybatis.domain
+  mapper-locations: classpath:mapper/*.xml

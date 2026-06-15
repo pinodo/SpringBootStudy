@@ -1,7 +1,5 @@
 package com.example.jpa;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,14 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.example.jpa.ex03_embeddable.Address;
-import com.example.jpa.ex03_embeddable.Company;
+import com.example.jpa.ex06_bidirection_exercise.Department;
+import com.example.jpa.ex06_bidirection_exercise.Employee;
 import com.example.jpa.util.JpaUtil;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
-public class Ex03_EmbeddableTests {
+public class Ex06BiDirectionExerciseTests {
 
   // 엔티티 매니저 (영속성 컨텍스트 관리자)
   private EntityManager em;
@@ -57,17 +55,34 @@ public class Ex03_EmbeddableTests {
 
   // 이제부터 테스트 진행
   @Test
-  @DisplayName("임베디드 타입 테스트")
-  void embeddedTest() {
-    Address office = new Address("Seoul", "문래대로", "12345");
-    Address factory = new Address("Seoul", "디지털로", "54321");
+  @DisplayName("양방향 저장 및 조회 테스트")
+  void biDirectionExerciseTests() {
 
-    Company company = new Company(1L, "새싹소프트", office, factory);
-    em.persist(company);
+    Department dept1 = new Department("개발부");
+    Department dept2 = new Department("영업부");
+
+    Employee emp1 = new Employee("kim", 1, 5000);
+    Employee emp2 = new Employee("lee", 1, 6000);
+    Employee emp3 = new Employee("jung", 2, 5000);
+    Employee emp4 = new Employee("choi", 2, 6000);
+
+    dept1.addEmployee(emp1);
+    dept1.addEmployee(emp2);
+    dept2.addEmployee(emp3);
+    dept2.addEmployee(emp4);
+
+    em.persist(dept1);
+    em.persist(dept2);
 
     em.flush();
+    em.clear();
 
-    Company findCompany = em.find(Company.class, 1L);
-    assertEquals("새싹소프트", findCompany.getName());
+    Department findEmployee = em.find(Department.class, dept1.getId());
+    System.out.println(findEmployee.getEmployees().get(1).getSalary());
+
+    findEmployee.getEmployees().remove(1);
+    System.out.println(findEmployee.getEmployees().get(0).getSalary());
+
+    em.flush();
   }
 }

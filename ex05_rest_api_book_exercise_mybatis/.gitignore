@@ -36,28 +36,10 @@ out/
 ### VS Code ###
 .vscode/
 
-### 환경변수 / 시크릿 ###
+### Spring Boot ###
 .env
 .env.*
 !.env.example          # 예시 파일은 커밋 허용
 application-local.yml
 application-local.properties
 application-secret.yml
-
-### 로그 ###
-*.log
-logs/
-
-### OS ###
-.DS_Store              # macOS
-Thumbs.db              # Windows
-
-### 테스트 커버리지 ###
-/jacoco/
-*.exec
-
-### QueryDSL 생성 파일 ###
-src/main/generated/    # Q클래스 자동 생성 경로
-
-### 로컬 ###
-src/main/resources/META-INF/persistence.xml

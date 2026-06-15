@@ -53,7 +53,7 @@ public class Order {
   // 비즈니스 메서드 작성 시 반대편 편의 메서드와 연동해서 만들기
   public void addOrderItem(OrderItem item) {
     this.orderItems.add(item); // Order123 주문에 iPad를 넣는다.
-    if (item.getOrder() != null) {
+    if (item.getOrder() == null) {
       item.setOrder(this); // iPad의 주문 번호를 Order123으로 세팅한다.
     }
   }

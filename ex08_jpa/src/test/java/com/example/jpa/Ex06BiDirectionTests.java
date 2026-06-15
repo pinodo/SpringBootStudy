@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.example.jpa.ex05_one_to_many.Post;
-import com.example.jpa.ex05_one_to_many.PostComment;
 import com.example.jpa.ex06_bidirection.Order;
 import com.example.jpa.ex06_bidirection.OrderItem;
 import com.example.jpa.util.JpaUtil;

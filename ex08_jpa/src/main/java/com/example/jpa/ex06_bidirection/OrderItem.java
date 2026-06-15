@@ -41,6 +41,8 @@ public class OrderItem {
   // 비즈니스 메서드 작성 시 반대편 편의 메서드와 연동해서 만들기
   public void setOrder(Order order) {
     this.order = order;
-    order.getOrderItems().add(this);
+    if (!order.getOrderItems().contains(this)) {
+      order.getOrderItems().add(this);
+    }
   }
 }
