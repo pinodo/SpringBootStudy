@@ -36,11 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 
-### Spring Boot ###
-.env
-.env.*
-!.env.example          # 예시 파일은 커밋 허용
-application-local.yml
-application-local.properties
-application-secret.yml
 src/main/resources/application.yml

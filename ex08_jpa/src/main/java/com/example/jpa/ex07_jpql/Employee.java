@@ -1,4 +1,4 @@
-package com.example.jpa.ex06_bidirection_exercise;
+package com.example.jpa.ex07_jpql;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,9 +13,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// 자식 엔티티
+
 @Entity
+@Table(name = "employees")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "employee")
 @Getter
 @ToString
 public class Employee {
@@ -25,23 +27,18 @@ public class Employee {
   private Long id;
 
   private String name;
-  private Integer deptId;
   private Integer salary;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "dept_id")
   private Department department;
 
-  public Employee(String name, Integer deptId, Integer salary) {
+  public Employee(String name, Integer salary) {
     this.name = name;
-    this.deptId = deptId;
     this.salary = salary;
   }
 
   public void setDepartment(Department department) {
     this.department = department;
-    if (!department.getEmployees().contains(this)) {
-      department.getEmployees().add(this);
-    }
   }
 }

@@ -1,13 +1,9 @@
 package com.example.restapi.bookexercise.mybatis.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record BookCreateRequest(
-  @NotNull(message = "ISBN 입력은 필수 항목입니다.")
+public record BookUpdateRequest(
   Long isbn,
-
-  @NotBlank(message = "제목 입력은 필수 항목입니다.")
   String title,
 
   @NotNull(message = "가격 입력은 필수 항목입니다.")

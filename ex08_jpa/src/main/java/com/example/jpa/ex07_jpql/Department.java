@@ -1,9 +1,8 @@
-package com.example.jpa.ex06_bidirection_exercise;
+package com.example.jpa.ex07_jpql;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,9 +14,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// 부모 엔티티
+
 @Entity
+@Table(name = "departments")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "department")
 @Getter
 @ToString
 public class Department {
@@ -28,16 +29,15 @@ public class Department {
 
   private String deptName;
 
+  @OneToMany(mappedBy = "department", orphanRemoval = true)
+  private List<Employee> employees = new ArrayList<>();
+
   public Department(String deptName) {
     this.deptName = deptName;
   }
 
-  @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Employee> employees = new ArrayList<>();
-
-  public void addEmployee(Employee employee) {
-    this.employees.add(employee);
-    if (employee.getDepartment() == null) 
-    employee.setDepartment(this);
-  }
+  // public void addEmployee(Employee employee) {
+  //   this.employees.add(employee);
+  //   employee.setDepartment(this);
+  // }
 }
