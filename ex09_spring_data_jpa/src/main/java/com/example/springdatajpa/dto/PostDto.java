@@ -26,19 +26,32 @@ public class PostDto {
     String content,
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
-    List<Comment> comments
+    List<CommentResponse> comments
   ) {
-    // 엔티티를 DTO로 변환
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드
     public static Response from(Post post) {
       return new Response(
-        post.getId(), 
-        post.getTitle(), 
-        post.getContent(), 
-        post.getCreatedAt(), 
-        post.getUpdatedAt(), 
-        post.getComments());
+        post.getId(),
+        post.getTitle(),
+        post.getContent(),
+        post.getCreatedAt(),
+        post.getUpdatedAt(),
+        post.getComments().stream().map(CommentResponse::from).toList());
     }
   }
 
-
+  // 댓글 조회 응답
+  public record CommentResponse(
+    Long id,
+    String content,
+    LocalDateTime createdAt
+  ) {
+    // 엔티티 -> DTO
+    public static CommentResponse from(Comment comment) {
+      return new CommentResponse(
+        comment.getId(), 
+        comment.getContent(), 
+        comment.getCreatedAt());
+    }
+  }
 }
